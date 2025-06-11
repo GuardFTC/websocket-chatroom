@@ -1,7 +1,7 @@
 package com.ftc.websocketdemo.handler;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.ftc.websocketdemo.handler.impl.room.RoomHandlerTypeEnum;
+import com.ftc.websocketdemo.handler.enums.RoomHandlerTypeEnum;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

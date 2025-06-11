@@ -1,4 +1,4 @@
-package com.ftc.websocketdemo.handler.impl.chat;
+package com.ftc.websocketdemo.handler.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

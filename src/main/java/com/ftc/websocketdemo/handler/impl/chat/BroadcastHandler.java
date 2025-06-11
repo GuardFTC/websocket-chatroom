@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.ftc.websocketdemo.core.pool.room.RoomPool;
 import com.ftc.websocketdemo.entity.room.Room;
 import com.ftc.websocketdemo.handler.MessageHandler;
+import com.ftc.websocketdemo.handler.enums.ChatHandlerTypeEnum;
 import com.ftc.websocketdemo.handler.message.ChatMessage;
 import com.ftc.websocketdemo.handler.message.SessionMessage;
 import lombok.RequiredArgsConstructor;

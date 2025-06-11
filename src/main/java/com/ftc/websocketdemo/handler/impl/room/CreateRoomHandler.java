@@ -1,6 +1,7 @@
 package com.ftc.websocketdemo.handler.impl.room;
 
 import com.ftc.websocketdemo.core.factory.RoomFactory;
+import com.ftc.websocketdemo.handler.enums.RoomHandlerTypeEnum;
 import com.ftc.websocketdemo.handler.message.SessionMessage;
 import com.ftc.websocketdemo.handler.message.RoomMessage;
 import com.ftc.websocketdemo.core.pool.room.RoomPool;
