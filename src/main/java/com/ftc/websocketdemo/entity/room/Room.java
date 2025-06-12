@@ -1,6 +1,7 @@
 package com.ftc.websocketdemo.entity.room;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -28,6 +29,11 @@ public class Room {
      * 房间名称
      */
     private String roomName;
+
+    /**
+     * 房主会话ID
+     */
+    private String ownerId = StrUtil.EMPTY;
 
     /**
      * 房主
@@ -112,10 +118,8 @@ public class Room {
         }
 
         //4.获取房间中的其他会话,设置新房主
-        this.owner = roomSessions.values().stream()
-                .filter(s -> !s.equals(session))
-                .findFirst()
-                .orElse(null);
+        this.owner = roomSessions.values().stream().filter(s -> !s.equals(session)).findFirst().orElse(null);
+        this.ownerId = ObjectUtil.isNotNull(this.owner) ? this.owner.getId() : StrUtil.EMPTY;
 
         //5.推送消息通知房主变更
         if (ObjectUtil.isNotNull(this.owner)) {

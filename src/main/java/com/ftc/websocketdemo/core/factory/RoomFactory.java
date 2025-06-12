@@ -29,6 +29,7 @@ public class RoomFactory {
 
         //3.设置房主
         room.setOwner(session);
+        room.setOwnerId(session.getId());
 
         //4.添加房间会话
         room.addRoomSession(session);

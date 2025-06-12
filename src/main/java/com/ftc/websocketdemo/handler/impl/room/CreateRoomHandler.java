@@ -1,16 +1,16 @@
 package com.ftc.websocketdemo.handler.impl.room;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.ftc.websocketdemo.core.factory.RoomFactory;
-import com.ftc.websocketdemo.handler.enums.RoomHandlerTypeEnum;
-import com.ftc.websocketdemo.handler.message.SessionMessage;
-import com.ftc.websocketdemo.handler.message.RoomMessage;
 import com.ftc.websocketdemo.core.pool.room.RoomPool;
 import com.ftc.websocketdemo.entity.room.Room;
 import com.ftc.websocketdemo.handler.MessageHandler;
+import com.ftc.websocketdemo.handler.enums.RoomHandlerTypeEnum;
+import com.ftc.websocketdemo.handler.message.RoomMessage;
+import com.ftc.websocketdemo.handler.message.SessionMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
@@ -35,16 +35,24 @@ public class CreateRoomHandler implements MessageHandler {
     @SneakyThrows(value = {IOException.class})
     public void handleMessage(WebSocketSession session, SessionMessage sessionMessage) {
 
-        //1.解析消息体
+        //1.通过会话ID获取房间
+        Room room = RoomPool.getRoomBySession(session.getId());
+
+        //2.如果已经是房主，那么直接返回
+        if (room != null && room.getOwner().equals(session)) {
+            return;
+        }
+
+        //3.解析消息体
         RoomMessage roomMessage = parsePayload(sessionMessage.getPayload(), RoomMessage.class);
 
-        //2.创建房间
-        Room room = RoomFactory.createRoom(session, roomMessage.getRoomName());
+        //4.创建房间
+        room = RoomFactory.createRoom(session, roomMessage.getRoomName());
 
-        //3.房间池处理
+        //5.房间池处理
         RoomPool.addRoom(room);
 
-        //4.推送客户端消息
-        session.sendMessage(new TextMessage(room.getRoomId() + "房间创建成功"));
+        //6.推送客户端消息
+        session.sendMessage(SessionMessage.message(RoomHandlerTypeEnum.CREATE_ROOM.getType(), JSONObject.toJSONString(room)));
     }
 }
