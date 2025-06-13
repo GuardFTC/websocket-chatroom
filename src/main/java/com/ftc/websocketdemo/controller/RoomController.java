@@ -1,14 +1,12 @@
 package com.ftc.websocketdemo.controller;
 
+import com.ftc.websocketdemo.core.factory.RoomFactory;
 import com.ftc.websocketdemo.core.pool.room.RoomPool;
 import com.ftc.websocketdemo.entity.room.Room;
 import com.ftc.websocketdemo.entity.room.RoomDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,9 +29,23 @@ public class RoomController {
     }
 
     @PostMapping
-    public Room createRoom(RoomDto roomDto) {
-        Room room = new Room(roomName);
+    public Room createRoom(@RequestBody RoomDto roomDto) {
+
+        //1.通过用户ID获取房间
+        Room room = roomPool.getRoomByUserId(roomDto.getUserId());
+
+        //2.如果已经是房主，那么直接返回
+        if (room != null && room.getOwnerUserId().equals(roomDto.getUserId())) {
+            return room;
+        }
+
+        //3.创建房间
+        room = RoomFactory.createRoom(roomDto.getUserId(), roomDto.getRoomName());
+
+        //5.房间池处理
         roomPool.addRoom(room);
+
+        //6.返回房间
         return room;
     }
 }

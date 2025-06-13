@@ -13,11 +13,6 @@ import lombok.Getter;
 public enum RoomHandlerTypeEnum {
 
     /**
-     * 创建房间
-     */
-    CREATE_ROOM("createRoom"),
-
-    /**
      * 加入房间
      */
     JOIN_ROOM("joinRoom"),
@@ -26,11 +21,6 @@ public enum RoomHandlerTypeEnum {
      * 离开房间
      */
     LEAVE_ROOM("leaveRoom"),
-
-    /**
-     * 关闭房间
-     */
-    CLOSE_ROOM("closeRoom"),
     ;
 
     /**

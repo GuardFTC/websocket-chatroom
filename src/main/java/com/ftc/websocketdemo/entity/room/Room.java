@@ -30,6 +30,11 @@ public class Room {
     private String roomName;
 
     /**
+     * 房主ID
+     */
+    private String ownerUserId;
+
+    /**
      * 房主
      */
     @JsonIgnore
@@ -44,78 +49,76 @@ public class Room {
     /**
      * 添加房间会话
      *
+     * @param userId  用户ID
      * @param session 会话
      */
     @SneakyThrows(value = {IOException.class})
-    public void addRoomSession(WebSocketSession session) {
+    public void addRoomSession(String userId, WebSocketSession session) {
 
         //1.房间会话Map加入会话
-        roomSessions.put(session.getId(), session);
+        roomSessions.put(userId, session);
 
-        //2.如果不是房主，那么通知房间所有人
-        if (!session.equals(owner)) {
-            for (WebSocketSession roomSession : roomSessions.values()) {
-                roomSession.sendMessage(new TextMessage("用户" + session.getId() + "已加入房间"));
-            }
+        //2.通知房间所有人
+        for (WebSocketSession roomSession : roomSessions.values()) {
+            roomSession.sendMessage(new TextMessage("用户" + userId + "已加入房间"));
         }
     }
 
     /**
      * 移除房间会话
      *
-     * @param sessionId 会话ID
+     * @param userId 用户ID
      */
     @SneakyThrows(value = {IOException.class})
-    public void removeRoomSession(String sessionId) {
+    public void removeRoomSession(String userId) {
 
         //1.从房间会话Map移除会话
-        roomSessions.remove(sessionId);
+        roomSessions.remove(userId);
 
         //2.通知房间所有人
         for (WebSocketSession roomSession : roomSessions.values()) {
-            roomSession.sendMessage(new TextMessage("用户" + sessionId + "已离开房间"));
+            roomSession.sendMessage(new TextMessage("用户" + userId + "已离开房间"));
         }
     }
 
     /**
      * 获取房间会话
      *
-     * @param sessionId 会话ID
+     * @param userId 用户ID
      * @return WebSocketSession
      */
-    public WebSocketSession getRoomSession(String sessionId) {
-        return roomSessions.get(sessionId);
+    public WebSocketSession getRoomSession(String userId) {
+        return roomSessions.get(userId);
     }
 
     /**
      * 变更房主
      *
-     * @param sessionId 会话ID
+     * @param session 会话
      */
     @SneakyThrows(value = {IOException.class})
-    public void changeOwner(String sessionId) {
+    public void changeOwner(WebSocketSession session) {
 
-        //1.获取当前会话
-        WebSocketSession session = roomSessions.get(sessionId);
-        if (ObjectUtil.isNull(session)) {
-            return;
-        }
-
-        //2.如果已关闭，返回
+        //1.如果已关闭，返回
         if (!session.isOpen()) {
             return;
         }
 
-        //3.如果当前会话不是房主
+        //2.如果当前会话不是房主
         if (!session.equals(owner)) {
             return;
         }
 
-        //4.获取房间中的其他会话,设置新房主
+        //3.获取房间中的其他会话,设置新房主
         this.owner = roomSessions.values().stream().filter(s -> !s.equals(session)).findFirst().orElse(null);
 
-        //5.推送消息通知房主变更
+        //4.如果新房主不为空
         if (ObjectUtil.isNotNull(this.owner)) {
+
+            //5.设置房主ID
+            this.ownerUserId = this.owner.getAttributes().get("userId").toString();
+
+            //6.推送消息通知房主变更
             this.owner.sendMessage(new TextMessage("您已成为房主"));
         }
     }

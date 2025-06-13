@@ -12,9 +12,9 @@ import lombok.Data;
 public class RoomMessage {
 
     /**
-     * 房间名称
+     * 用户ID
      */
-    private String roomName = StrUtil.EMPTY;
+    private String userId = StrUtil.EMPTY;
 
     /**
      * 房间ID

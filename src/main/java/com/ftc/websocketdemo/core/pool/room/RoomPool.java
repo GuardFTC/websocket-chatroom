@@ -3,11 +3,9 @@ package com.ftc.websocketdemo.core.pool.room;
 import com.ftc.websocketdemo.entity.room.Room;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -40,61 +38,43 @@ public class RoomPool {
         ROOM_POOL.put(room.getRoomId(), room);
 
         //2.用户ID-房间映射加入房主-房间映射
-        USERID_ROOM_MAP.put(room.getOwner().getId(), room);
+        USERID_ROOM_MAP.put(room.getOwnerUserId(), room);
 
         //3.日志打印
-        log.info("房间[{}]已创建 房主:[{}]", room.getRoomId(), room.getOwner().getId());
+        log.info("房间[{}]已创建 房主:[{}]", room.getRoomId(), room.getOwnerUserId());
     }
 
     /**
      * 加入房间
      *
-     * @param session 会话
-     * @param room    房间
+     * @param userId 用户ID
+     * @param room   房间
      */
-    public void joinRoom(WebSocketSession session, Room room) {
+    public void joinRoom(String userId, Room room) {
 
         //1.加入用户ID-房间映射
-        USERID_ROOM_MAP.put(session.getId(), room);
+        USERID_ROOM_MAP.put(userId, room);
 
         //2.日志打印
-        log.info("[{}]:已加入房间:[{}]", session.getId(), room.getRoomId());
+        log.info("[{}]:已加入房间:[{}]", userId, room.getRoomId());
     }
 
     /**
      * 离开房间
      *
-     * @param session 会话
-     * @param room    房间
+     * @param userId 用户ID
+     * @param room   房间
      */
-    public void leaveRoom(WebSocketSession session, Room room) {
+    public void leaveRoom(String userId, Room room) {
 
         //1.从用户ID-房间映射移除session
-        USERID_ROOM_MAP.remove(session.getId());
+        USERID_ROOM_MAP.remove(userId);
 
         //2.如果房间会话为空，则移除房间
         if (room.getRoomSessions().isEmpty()) {
             ROOM_POOL.remove(room.getRoomId());
             log.info("房间[{}]已关闭", room.getRoomId());
         }
-    }
-
-    /**
-     * 关闭房间
-     *
-     * @param room       房间
-     * @param sessionIds 房间会话ID列表
-     */
-    public void closeRoom(Room room, Set<String> sessionIds) {
-
-        //1.从用户ID-房间映射移除房间会话
-        sessionIds.forEach(USERID_ROOM_MAP::remove);
-
-        //2.从房间池移除房间
-        ROOM_POOL.remove(room.getRoomId());
-
-        //3.打印日志
-        log.info("房间[{}]已关闭", room.getRoomId());
     }
 
     /**

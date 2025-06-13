@@ -1,11 +1,12 @@
 package com.ftc.websocketdemo.ws;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.ftc.websocketdemo.ws.handler.message.SessionMessage;
 import com.ftc.websocketdemo.core.pool.ActiveSessionPool;
 import com.ftc.websocketdemo.ws.handler.MessageHandler;
 import com.ftc.websocketdemo.ws.handler.MessageHandlerFactory;
+import com.ftc.websocketdemo.ws.handler.enums.RoomHandlerTypeEnum;
 import com.ftc.websocketdemo.ws.handler.impl.room.LeaveRoomHandler;
+import com.ftc.websocketdemo.ws.handler.message.SessionMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -56,8 +57,14 @@ public class ChatSocketHandler extends TextWebSocketHandler {
         //1.获取会话池移除会话
         activeSessionPool.removeSession(session, status);
 
-        //2.处理离开房间逻辑
-        leaveRoomHandler.handleMessage(session, null);
+        //2.拼接离开房间消息
+        JSONObject payload = new JSONObject();
+        payload.put("userId", session.getAttributes().get("userId").toString());
+        payload.put("roomId", session.getAttributes().get("roomId").toString());
+        SessionMessage sessionMessage = new SessionMessage(RoomHandlerTypeEnum.LEAVE_ROOM.getType(), payload.toJSONString());
+
+        //3.处理离开房间逻辑
+        leaveRoomHandler.handleMessage(session, sessionMessage);
     }
 }
 

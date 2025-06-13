@@ -16,7 +16,7 @@ public class RoomDto {
     private String userId;
 
     /**
-     * 用户名称
+     * 房间名称
      */
-    private String userName;
+    private String roomName;
 }

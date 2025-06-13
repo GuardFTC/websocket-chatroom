@@ -34,5 +34,15 @@ public class UserPool {
         //2.日志打印
         log.info("用户[{}]已创建", user);
     }
+
+    /**
+     * 获取用户
+     *
+     * @param userId 用户ID
+     * @return 用户
+     */
+    public User getUser(String userId) {
+        return USER_POOL.get(userId);
+    }
 }
 

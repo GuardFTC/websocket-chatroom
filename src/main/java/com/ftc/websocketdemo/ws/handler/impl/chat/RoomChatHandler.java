@@ -2,7 +2,9 @@ package com.ftc.websocketdemo.ws.handler.impl.chat;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.ftc.websocketdemo.core.pool.room.RoomPool;
+import com.ftc.websocketdemo.core.pool.user.UserPool;
 import com.ftc.websocketdemo.entity.room.Room;
+import com.ftc.websocketdemo.entity.user.User;
 import com.ftc.websocketdemo.ws.handler.MessageHandler;
 import com.ftc.websocketdemo.ws.handler.enums.ChatHandlerTypeEnum;
 import com.ftc.websocketdemo.ws.handler.message.ChatMessage;
@@ -26,6 +28,8 @@ public class RoomChatHandler implements MessageHandler {
 
     private final RoomPool roomPool;
 
+    private final UserPool userPool;
+
     @Override
     public String getHandlerType() {
         return ChatHandlerTypeEnum.ROOM_CHAT.getType();
@@ -38,21 +42,38 @@ public class RoomChatHandler implements MessageHandler {
         //1.解析消息体
         ChatMessage chatMessage = parsePayload(sessionMessage.getPayload(), ChatMessage.class);
 
-        //2.通过SessionID获取房间
-        Room room = roomPool.getRoomByUserId(session.getId());
+        //2.获取用户ID、房间ID、目标用户ID
+        String userId = chatMessage.getUserId();
+        String roomId = chatMessage.getRoomId();
+        String targetUserId = chatMessage.getTargetUserId();
+
+        //3.通过用户ID获取用户
+        User user = userPool.getUser(userId);
+        if (ObjectUtil.isNull(user)) {
+            return;
+        }
+
+        //4.通过房间ID获取房间
+        Room room = roomPool.getRoom(roomId);
         if (ObjectUtil.isNull(room)) {
             return;
         }
 
-        //3.获取目标会话
-        WebSocketSession targetSession = room.getRoomSession(chatMessage.getTargetSessionId());
+        //5.通过目标用户ID获取用户
+        User targetUser = userPool.getUser(targetUserId);
+        if (ObjectUtil.isNull(targetUser)) {
+            return;
+        }
 
-        //4.如果目标为空或已关闭，返回
+        //6.获取目标会话
+        WebSocketSession targetSession = room.getRoomSession(targetUserId);
+
+        //7.如果目标为空或已关闭，返回
         if (ObjectUtil.isNull(targetSession) || !targetSession.isOpen()) {
             return;
         }
 
-        //5.发送消息
+        //8.发送消息
         targetSession.sendMessage(new TextMessage(chatMessage.getMessage()));
     }
 }

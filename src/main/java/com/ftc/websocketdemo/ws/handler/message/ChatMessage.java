@@ -12,14 +12,19 @@ import lombok.Data;
 public class ChatMessage {
 
     /**
+     * 用户ID
+     */
+    private String userId = StrUtil.EMPTY;
+
+    /**
      * 房间ID
      */
     private String roomId = StrUtil.EMPTY;
 
     /**
-     * 目标会话ID
+     * 目标用户ID
      */
-    private String targetSessionId = StrUtil.EMPTY;
+    private String targetUserId = StrUtil.EMPTY;
 
     /**
      * 消息内容
