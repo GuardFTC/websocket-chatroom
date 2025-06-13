@@ -1,7 +1,7 @@
-package com.ftc.websocketdemo.handler;
+package com.ftc.websocketdemo.ws.handler;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.ftc.websocketdemo.handler.message.SessionMessage;
+import com.ftc.websocketdemo.ws.handler.message.SessionMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 /**

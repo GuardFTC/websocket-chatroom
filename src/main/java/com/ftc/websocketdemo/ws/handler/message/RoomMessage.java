@@ -1,4 +1,4 @@
-package com.ftc.websocketdemo.handler.message;
+package com.ftc.websocketdemo.ws.handler.message;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;

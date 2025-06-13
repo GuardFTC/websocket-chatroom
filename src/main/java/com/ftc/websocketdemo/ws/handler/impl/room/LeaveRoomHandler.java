@@ -1,11 +1,11 @@
-package com.ftc.websocketdemo.handler.impl.room;
+package com.ftc.websocketdemo.ws.handler.impl.room;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.ftc.websocketdemo.handler.enums.RoomHandlerTypeEnum;
-import com.ftc.websocketdemo.handler.message.SessionMessage;
+import com.ftc.websocketdemo.ws.handler.enums.RoomHandlerTypeEnum;
+import com.ftc.websocketdemo.ws.handler.message.SessionMessage;
 import com.ftc.websocketdemo.core.pool.room.RoomPool;
 import com.ftc.websocketdemo.entity.room.Room;
-import com.ftc.websocketdemo.handler.MessageHandler;
+import com.ftc.websocketdemo.ws.handler.MessageHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -30,7 +30,7 @@ public class LeaveRoomHandler implements MessageHandler {
     public void handleMessage(WebSocketSession session, SessionMessage sessionMessage) {
 
         //1.通过SessionID获取房间
-        Room room = roomPool.getRoomBySession(session.getId());
+        Room room = roomPool.getRoomByUserId(session.getId());
         if (ObjectUtil.isNull(room)) {
             return;
         }

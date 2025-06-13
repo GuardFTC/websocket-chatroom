@@ -1,4 +1,4 @@
-package com.ftc.websocketdemo.handler.message;
+package com.ftc.websocketdemo.ws.handler.message;
 
 import com.alibaba.fastjson2.JSONObject;
 import lombok.AllArgsConstructor;

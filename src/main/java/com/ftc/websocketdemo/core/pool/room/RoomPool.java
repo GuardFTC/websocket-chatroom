@@ -25,9 +25,9 @@ public class RoomPool {
     private static final Map<String, Room> ROOM_POOL = new ConcurrentHashMap<>();
 
     /**
-     * 会话-房间映射
+     * 用户ID-房间映射
      */
-    private static final Map<String, Room> SESSION_ROOM_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, Room> USERID_ROOM_MAP = new ConcurrentHashMap<>();
 
     /**
      * 添加房间
@@ -39,8 +39,8 @@ public class RoomPool {
         //1.房间池加入房间
         ROOM_POOL.put(room.getRoomId(), room);
 
-        //2.房间-会话映射加入房主-房间映射
-        SESSION_ROOM_MAP.put(room.getOwner().getId(), room);
+        //2.用户ID-房间映射加入房主-房间映射
+        USERID_ROOM_MAP.put(room.getOwner().getId(), room);
 
         //3.日志打印
         log.info("房间[{}]已创建 房主:[{}]", room.getRoomId(), room.getOwner().getId());
@@ -54,8 +54,8 @@ public class RoomPool {
      */
     public void joinRoom(WebSocketSession session, Room room) {
 
-        //1.加入会话-房间映射
-        SESSION_ROOM_MAP.put(session.getId(), room);
+        //1.加入用户ID-房间映射
+        USERID_ROOM_MAP.put(session.getId(), room);
 
         //2.日志打印
         log.info("[{}]:已加入房间:[{}]", session.getId(), room.getRoomId());
@@ -69,8 +69,8 @@ public class RoomPool {
      */
     public void leaveRoom(WebSocketSession session, Room room) {
 
-        //1.从会话-房间映射移除session
-        SESSION_ROOM_MAP.remove(session.getId());
+        //1.从用户ID-房间映射移除session
+        USERID_ROOM_MAP.remove(session.getId());
 
         //2.如果房间会话为空，则移除房间
         if (room.getRoomSessions().isEmpty()) {
@@ -87,8 +87,8 @@ public class RoomPool {
      */
     public void closeRoom(Room room, Set<String> sessionIds) {
 
-        //1.从会话-房间映射移除房间会话
-        sessionIds.forEach(SESSION_ROOM_MAP::remove);
+        //1.从用户ID-房间映射移除房间会话
+        sessionIds.forEach(USERID_ROOM_MAP::remove);
 
         //2.从房间池移除房间
         ROOM_POOL.remove(room.getRoomId());
@@ -110,11 +110,11 @@ public class RoomPool {
     /**
      * 获取房间
      *
-     * @param sessionId 会话ID
+     * @param userId 用户ID
      * @return 房间
      */
-    public Room getRoomBySession(String sessionId) {
-        return SESSION_ROOM_MAP.get(sessionId);
+    public Room getRoomByUserId(String userId) {
+        return USERID_ROOM_MAP.get(userId);
     }
 
     /**

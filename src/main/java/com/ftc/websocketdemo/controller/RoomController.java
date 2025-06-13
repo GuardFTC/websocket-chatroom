@@ -2,9 +2,11 @@ package com.ftc.websocketdemo.controller;
 
 import com.ftc.websocketdemo.core.pool.room.RoomPool;
 import com.ftc.websocketdemo.entity.room.Room;
+import com.ftc.websocketdemo.entity.room.RoomDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,5 +28,12 @@ public class RoomController {
     @GetMapping
     public List<Room> getAllRoom() {
         return roomPool.getAllRoom();
+    }
+
+    @PostMapping
+    public Room createRoom(RoomDto roomDto) {
+        Room room = new Room(roomName);
+        roomPool.addRoom(room);
+        return room;
     }
 }

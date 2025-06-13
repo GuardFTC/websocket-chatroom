@@ -1,13 +1,13 @@
-package com.ftc.websocketdemo.handler.impl.room;
+package com.ftc.websocketdemo.ws.handler.impl.room;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.ftc.websocketdemo.core.factory.RoomFactory;
 import com.ftc.websocketdemo.core.pool.room.RoomPool;
 import com.ftc.websocketdemo.entity.room.Room;
-import com.ftc.websocketdemo.handler.MessageHandler;
-import com.ftc.websocketdemo.handler.enums.RoomHandlerTypeEnum;
-import com.ftc.websocketdemo.handler.message.RoomMessage;
-import com.ftc.websocketdemo.handler.message.SessionMessage;
+import com.ftc.websocketdemo.ws.handler.MessageHandler;
+import com.ftc.websocketdemo.ws.handler.enums.RoomHandlerTypeEnum;
+import com.ftc.websocketdemo.ws.handler.message.RoomMessage;
+import com.ftc.websocketdemo.ws.handler.message.SessionMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ public class CreateRoomHandler implements MessageHandler {
     public void handleMessage(WebSocketSession session, SessionMessage sessionMessage) {
 
         //1.通过会话ID获取房间
-        Room room = RoomPool.getRoomBySession(session.getId());
+        Room room = RoomPool.getRoomByUserId(session.getId());
 
         //2.如果已经是房主，那么直接返回
         if (room != null && room.getOwner().equals(session)) {

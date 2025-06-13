@@ -1,11 +1,11 @@
-package com.ftc.websocketdemo;
+package com.ftc.websocketdemo.ws;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.ftc.websocketdemo.handler.message.SessionMessage;
+import com.ftc.websocketdemo.ws.handler.message.SessionMessage;
 import com.ftc.websocketdemo.core.pool.ActiveSessionPool;
-import com.ftc.websocketdemo.handler.MessageHandler;
-import com.ftc.websocketdemo.handler.MessageHandlerFactory;
-import com.ftc.websocketdemo.handler.impl.room.LeaveRoomHandler;
+import com.ftc.websocketdemo.ws.handler.MessageHandler;
+import com.ftc.websocketdemo.ws.handler.MessageHandlerFactory;
+import com.ftc.websocketdemo.ws.handler.impl.room.LeaveRoomHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

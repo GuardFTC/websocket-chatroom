@@ -1,8 +1,8 @@
 package com.ftc.websocketdemo.config;
 
-import com.ftc.websocketdemo.ChatSocketHandler;
+import com.ftc.websocketdemo.ws.ChatSocketHandler;
 import com.ftc.websocketdemo.core.pool.ActiveSessionPool;
-import com.ftc.websocketdemo.handler.impl.room.LeaveRoomHandler;
+import com.ftc.websocketdemo.ws.handler.impl.room.LeaveRoomHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;

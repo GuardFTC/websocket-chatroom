@@ -1,8 +1,8 @@
-package com.ftc.websocketdemo.handler.impl.heartbeat;
+package com.ftc.websocketdemo.ws.handler.impl.heartbeat;
 
-import com.ftc.websocketdemo.handler.MessageHandler;
-import com.ftc.websocketdemo.handler.enums.HeartBeatHandlerTypeEnum;
-import com.ftc.websocketdemo.handler.message.SessionMessage;
+import com.ftc.websocketdemo.ws.handler.MessageHandler;
+import com.ftc.websocketdemo.ws.handler.enums.HeartBeatHandlerTypeEnum;
+import com.ftc.websocketdemo.ws.handler.message.SessionMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -13,20 +13,20 @@ import java.io.IOException;
 /**
  * @author 冯铁城 [17615007230@163.com]
  * @date 2025-06-11 15:45:34
- * @describe 心跳消息处理器
+ * @describe 获取会话ID处理器
  */
 @Component
 @RequiredArgsConstructor
-public class HeartBeatHandler implements MessageHandler {
+public class GetSessionIdHandler implements MessageHandler {
 
     @Override
     public String getHandlerType() {
-        return HeartBeatHandlerTypeEnum.PING.getType();
+        return HeartBeatHandlerTypeEnum.GET_SESSION_ID.getType();
     }
 
     @Override
     @SneakyThrows(value = {IOException.class})
     public void handleMessage(WebSocketSession session, SessionMessage sessionMessage) {
-        session.sendMessage(SessionMessage.message(HeartBeatHandlerTypeEnum.PONG.getType(), null));
+        session.sendMessage(SessionMessage.message(HeartBeatHandlerTypeEnum.GET_SESSION_ID.getType(), session.getId()));
     }
 }
